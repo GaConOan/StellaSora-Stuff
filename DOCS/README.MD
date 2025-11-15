@@ -1,5 +1,5 @@
 # Stella Sora Dump #
-Just a random bullshit thing to play Stella Sora
+Just a random bullshit thing to play Stella Sora  
 All wiki about Stella Sora
 ----
 [NovaSora](https://novasora.wiki/)
