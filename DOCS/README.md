@@ -1,4 +1,4 @@
-# Stella Sora Dump #
+# <h1 align="center">Stella Sora Dump</h1> #
 ```
 Just a random bullshit thing to improve experience when play Stella Sora  
 ```
