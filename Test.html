@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>星-AI智能匹配委托角色方案科技系统</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      h2 {
+        color: #333;
+        border-bottom: 2px solid #4caf50;
+        padding-bottom: 10px;
+      }
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+      }
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background: #f9f9f9;
+        border-radius: 4px;
+      }
+      .checkbox-item label {
+        margin-left: 8px;
+        cursor: pointer;
+      }
+      .role-info {
+        font-size: 0.9em;
+        color: #666;
+        margin-left: 10px;
+      }
+      .demand-info {
+        font-size: 0.9em;
+        color: #666;
+        margin-left: 10px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 20px 0;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        border-left: 4px solid #4caf50;
+      }
+      .solution {
+        margin: 10px 0;
+        padding: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .solution-header {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+      .role-match {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        padding: 5px;
+        background: #f0f8ff;
+        border-radius: 3px;
+      }
+      .match-score {
+        margin-left: 10px;
+        font-weight: bold;
+        color: #e74c3c;
+      }
+      .no-solution {
+        color: #e74c3c;
+        font-style: italic;
+      }
+      .total-solution {
+        background: #e8f5e8;
+        border-left: 4px solid #27ae60;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+      .demand-assignment {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+      .trait-match {
+        font-size: 0.9em;
+        color: #666;
+        margin-left: 10px;
+      }
+      .matched-trait {
+        color: #27ae60;
+        font-weight: bold;
+      }
+      .unmatched-trait {
+        color: #e74c3c;
+      }
+      #roles-container {
+        display: none;
+        margin-top: 15px;
+      }
+ 
+      #roles-container.show {
+        display: grid;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>星-AI智能匹配委托角色方案科技系统</h1>
+ 
+      <!-- 角色选择区域 -->
+      <div class="section">
+        <h2>
+          可用角色（默认全选）<button
+            id="toggleRoles"
+            style="float: right; padding: 5px 10px"
+          >
+            展开
+          </button>
+        </h2>
+        <div class="checkbox-group" id="roles-container"></div>
+      </div>
+ 
+      <!-- 需求选择区域 -->
+      <div class="section">
+        <h2>需求选择</h2>
+        <div class="checkbox-group" id="demands-container"></div>
+      </div>
+ 
+      <!-- 匹配按钮 -->
+      <button onclick="matchDemands()">开始匹配</button>
+ 
+      <!-- 结果显示区域 -->
+      <div class="section">
+        <h2>匹配结果</h2>
+        <div id="results-container"></div>
+      </div>
+    </div>
+ 
+    <script>
+      // 角色数据 - 优化数据结构
+      const roles = [
+        { 名称: "千都世", 职业: "先锋", 特性: ["求知心切"] },
+        { 名称: "苍兰", 职业: "均衡", 特性: ["冒险家"] },
+        { 名称: "特丽莎", 职业: "辅助", 特性: ["稳扎稳打"] },
+        { 名称: "格丙", 职业: "先锋", 特性: ["求知心切"] },
+        { 名称: "科洛尼斯", 职业: "均衡", 特性: ["冒险家"] },
+        { 名称: "缇丽雅", 职业: "辅助", 特性: ["稳扎稳打"] },
+        { 名称: "花原", 职业: "先锋", 特性: ["求知心切"] },
+        { 名称: "卡娜丝", 职业: "均衡", 特性: ["冒险家"] },
+        { 名称: "小禾", 职业: "辅助", 特性: ["收集控"] },
+        { 名称: "师渺", 职业: "先锋", 特性: ["求知心切"] },
+        { 名称: "卡西米拉", 职业: "均衡", 特性: ["冒险家"] },
+        { 名称: "紫槿", 职业: "辅助", 特性: ["收集控"] },
+        { 名称: "焦糖", 职业: "先锋", 特性: ["奇思妙想"] },
+        { 名称: "鸢尾", 职业: "均衡", 特性: ["奇思妙想"] },
+        { 名称: "杏子", 职业: "辅助", 特性: ["冒险家"] },
+        { 名称: "尘沙", 职业: "先锋", 特性: ["奇思妙想"] },
+        { 名称: "雾语", 职业: "均衡", 特性: ["奇思妙想"] },
+        { 名称: "珂赛特", 职业: "辅助", 特性: ["求知心切"] },
+        { 名称: "希娅", 职业: "先锋", 特性: ["冒险家"] },
+        { 名称: "岭川", 职业: "均衡", 特性: ["收集控"] },
+        { 名称: "赤霞", 职业: "均衡", 特性: ["收集控"] },
+        { 名称: "菈露", 职业: "先锋", 特性: ["冒险家"] },
+        { 名称: "密涅瓦", 职业: "均衡", 特性: ["稳扎稳打"] },
+        { 名称: "璃麟", 职业: "均衡", 特性: ["求知心切"] },
+        { 名称: "琥珀", 职业: "先锋", 特性: ["收集控"] },
+      ];
+ 
+      // 需求数据 - 优化数据结构
+      const demands = [
+        {
+          物品名称: "金币",
+          职业需求: ["先锋", "先锋", "均衡"],
+          特性需求: ["冒险家", "求知心切"],
+        },
+        {
+          物品名称: "经验",
+          职业需求: ["先锋", "先锋", "均衡"],
+          特性需求: ["冒险家", "奇思妙想"],
+        },
+        {
+          物品名称: "秘纹经验",
+          职业需求: ["均衡", "均衡", "辅助"],
+          特性需求: ["收集控", "冒险家"],
+        },
+        {
+          物品名称: "帽子",
+          职业需求: ["先锋", "先锋", "辅助"],
+          特性需求: ["稳扎稳打", "求知心切"],
+        },
+        {
+          物品名称: "罐子",
+          职业需求: ["先锋", "先锋", "辅助"],
+          特性需求: ["收集控", "奇思妙想"],
+        },
+        {
+          物品名称: "灯泡",
+          职业需求: ["均衡", "均衡", "辅助"],
+          特性需求: ["稳扎稳打", "奇思妙想"],
+        },
+        {
+          物品名称: "怪诞",
+          职业需求: ["辅助", "均衡", "均衡"],
+          特性需求: ["冒险家", "稳扎稳打"],
+        },
+        {
+          物品名称: "嘟噜",
+          职业需求: ["先锋", "辅助", "先锋"],
+          特性需求: ["收集控", "求知心切"],
+        },
+        {
+          物品名称: "微光",
+          职业需求: ["先锋", "均衡", "均衡"],
+          特性需求: ["奇思妙想", "求知心切"],
+        },
+        {
+          物品名称: "节奏",
+          职业需求: ["先锋", "先锋", "均衡"],
+          特性需求: ["收集控", "求知心切"],
+        },
+        {
+          物品名称: "射击",
+          职业需求: ["先锋", "均衡", "均衡"],
+          特性需求: ["稳扎稳打", "奇思妙想"],
+        },
+        {
+          物品名称: "功夫",
+          职业需求: ["均衡", "辅助", "辅助"],
+          特性需求: ["稳扎稳打", "求知心切"],
+        },
+      ];
+ 
+      // 初始化页面
+      function initializePage() {
+        // 初始化角色选择
+        const rolesContainer = document.getElementById("roles-container");
+        roles.forEach((role, index) => {
+          const checkboxItem = document.createElement("div");
+          checkboxItem.className = "checkbox-item";
+          checkboxItem.innerHTML = `
+                    <input type="checkbox" id="role-${index}" checked>
+                    <label for="role-${index}">${role.名称}</label>
+                    <span class="role-info">职业: ${
+                      role.职业
+                    } | 特性: ${role.特性.join(", ")}</span>
+                `;
+          rolesContainer.appendChild(checkboxItem);
+        });
+ 
+        // 初始化需求选择
+        const demandsContainer = document.getElementById("demands-container");
+        demands.forEach((demand, index) => {
+          const checkboxItem = document.createElement("div");
+          checkboxItem.className = "checkbox-item";
+          checkboxItem.innerHTML = `
+                    <input type="checkbox" id="demand-${index}">
+                    <label for="demand-${index}">${demand.物品名称}</label>
+                    <span class="demand-info">职业需求: ${demand.职业需求.join(
+                      ", "
+                    )}<br> 特性需求: ${demand.特性需求.join(", ")}</span>
+                `;
+          demandsContainer.appendChild(checkboxItem);
+        });
+      }
+ 
+      // 获取选中的角色
+      function getSelectedRoles() {
+        const selectedRoles = [];
+        roles.forEach((role, index) => {
+          const checkbox = document.getElementById(`role-${index}`);
+          if (checkbox.checked) {
+            selectedRoles.push({ ...role, index });
+          }
+        });
+        return selectedRoles;
+      }
+ 
+      // 获取选中的需求
+      function getSelectedDemands() {
+        const selectedDemands = [];
+        demands.forEach((demand, index) => {
+          const checkbox = document.getElementById(`demand-${index}`);
+          if (checkbox.checked) {
+            selectedDemands.push({ ...demand, index });
+          }
+        });
+        return selectedDemands;
+      }
+ 
+      // 获取角色匹配的特性列表
+      function getMatchedTraits(roleTraits, demandTraits) {
+        const matched = [];
+        const unmatched = [...demandTraits];
+ 
+        roleTraits.forEach((trait) => {
+          const index = unmatched.indexOf(trait);
+          if (index !== -1) {
+            matched.push(trait);
+            unmatched.splice(index, 1);
+          }
+        });
+ 
+        return { matched, unmatched };
+      }
+      // 检查角色是否满足职业需求
+      function roleSatisfiesJob(role, job) {
+        return role.职业 === job;
+      }
+ 
+      // 计算角色对需求的特性匹配分数
+      function calculateTraitScore(role, demand) {
+        const { matched } = getMatchedTraits(role.特性, demand.特性需求);
+        return matched.length;
+      }
+ 
+      // 检查一个需求的所有角色是否满足特性需求（整体考虑）
+      function checkDemandTraitsSatisfied(assignedRoles, demandTraits) {
+        const satisfiedTraits = new Set();
+ 
+        for (const role of assignedRoles) {
+          const { matched } = getMatchedTraits(role.特性, demandTraits);
+          matched.forEach((trait) => satisfiedTraits.add(trait));
+ 
+          // 如果所有特性都已满足，提前返回
+          if (satisfiedTraits.size === demandTraits.length) {
+            return true;
+          }
+        }
+ 
+        return satisfiedTraits.size === demandTraits.length;
+      }
+ 
+      // 计算一个需求的特性匹配情况
+      function calculateDemandTraitScore(assignedRoles, demandTraits) {
+        const satisfiedTraits = new Set();
+ 
+        // 添加数组检查，防止assignedRoles不是数组
+        if (!Array.isArray(assignedRoles)) {
+          return {
+            satisfied: [],
+            unsatisfied: demandTraits,
+            score: 0,
+          };
+        }
+ 
+        for (const role of assignedRoles) {
+          const { matched } = getMatchedTraits(role.特性, demandTraits);
+          matched.forEach((trait) => satisfiedTraits.add(trait));
+        }
+ 
+        return {
+          satisfied: Array.from(satisfiedTraits),
+          unsatisfied: demandTraits.filter(
+            (trait) => !satisfiedTraits.has(trait)
+          ),
+          score: satisfiedTraits.size,
+        };
+      }
+ 
+      // 改进的全局特性平衡优化算法
+      function findMultiDemandSolution(selectedDemands, availableRoles) {
+        const totalRolesNeeded = selectedDemands.reduce(
+          (sum, demand) => sum + demand.职业需求.length,
+          0
+        );
+ 
+        if (availableRoles.length < totalRolesNeeded) {
+          return []; // 角色数量不足
+        }
+ 
+        console.log(
+          `开始搜索方案：${selectedDemands.length}个需求，需要${totalRolesNeeded}个角色`
+        );
+ 
+        // 性能优化：根据需求数量设置搜索限制
+        const maxSolutions = selectedDemands.length <= 2 ? 100 : 50;
+        const maxTimeMs = selectedDemands.length <= 2 ? 5000 : 3000;
+ 
+        const solutions = [];
+        let solutionCount = 0;
+        let startTime = Date.now();
+ 
+        // 预处理：计算每个角色对每个需求的特性匹配度
+        const roleDemandScores = {};
+        selectedDemands.forEach((demand, demandIndex) => {
+          roleDemandScores[demandIndex] = {};
+          availableRoles.forEach((role) => {
+            const matchedTraits = role.特性.filter((trait) =>
+              demand.特性需求.includes(trait)
+            );
+            roleDemandScores[demandIndex][role.index] = matchedTraits.length;
+          });
+        });
+ 
+        // 贪心预分配：为每个需求找到最佳角色
+        function greedyPreassign() {
+          const assignment = Array(selectedDemands.length)
+            .fill(null)
+            .map(() => []);
+          const usedRoles = new Set();
+ 
+          // 按需求数量排序，需求少的优先
+          const demandOrder = selectedDemands
+            .map((demand, index) => ({ demand, index }))
+            .sort(
+              (a, b) => a.demand.职业需求.length - b.demand.职业需求.length
+            );
+ 
+          for (const { demand, index } of demandOrder) {
+            for (const job of demand.职业需求) {
+              // 找到满足职业且未使用的最佳角色
+              const candidates = availableRoles
+                .filter(
+                  (role) => role.职业 === job && !usedRoles.has(role.index)
+                )
+                .sort((a, b) => {
+                  const aScore = roleDemandScores[index][a.index] || 0;
+                  const bScore = roleDemandScores[index][b.index] || 0;
+                  return bScore - aScore;
+                });
+ 
+              if (candidates.length > 0) {
+                const selected = candidates[0];
+                assignment[index].push(selected);
+                usedRoles.add(selected.index);
+              }
+            }
+          }
+ 
+          return { assignment, usedRoles };
+        }
+ 
+        // 特性交换优化：尝试通过交换角色来提高特性匹配度
+        function optimizeTraitExchange(solution) {
+          let improved = true;
+          let iterations = 0;
+          const maxIterations = 20;
+ 
+          while (improved && iterations < maxIterations) {
+            improved = false;
+            iterations++;
+ 
+            // 计算当前每个需求的未满足特性
+            const unmetTraits = [];
+            for (let i = 0; i < selectedDemands.length; i++) {
+              const demand = selectedDemands[i];
+              const assignedRoles = solution.assignment[i];
+              const traitScore = calculateDemandTraitScore(
+                assignedRoles,
+                demand.特性需求
+              );
+              unmetTraits[i] = traitScore.unsatisfied;
+            }
+ 
+            // 尝试所有可能的角色交换
+            for (let i = 0; i < selectedDemands.length; i++) {
+              for (let j = 0; j < selectedDemands.length; j++) {
+                if (i === j) continue;
+ 
+                const demandI = selectedDemands[i];
+                const demandJ = selectedDemands[j];
+                const rolesI = solution.assignment[i];
+                const rolesJ = solution.assignment[j];
+ 
+                // 尝试交换角色
+                for (let ri = 0; ri < rolesI.length; ri++) {
+                  for (let rj = 0; rj < rolesJ.length; rj++) {
+                    const roleI = rolesI[ri];
+                    const roleJ = rolesJ[rj];
+ 
+                    // 检查交换后是否满足职业要求
+                    if (
+                      roleI.职业 !== demandJ.职业需求[rj] ||
+                      roleJ.职业 !== demandI.职业需求[ri]
+                    ) {
+                      continue;
+                    }
+ 
+                    // 计算交换前的特性匹配分数
+                    const beforeScoreI = calculateDemandTraitScore(
+                      rolesI,
+                      demandI.特性需求
+                    ).score;
+                    const beforeScoreJ = calculateDemandTraitScore(
+                      rolesJ,
+                      demandJ.特性需求
+                    ).score;
+                    const beforeTotal = beforeScoreI + beforeScoreJ;
+ 
+                    // 创建交换后的角色列表
+                    const newRolesI = [...rolesI];
+                    const newRolesJ = [...rolesJ];
+                    newRolesI[ri] = roleJ;
+                    newRolesJ[rj] = roleI;
+ 
+                    // 计算交换后的特性匹配分数
+                    const afterScoreI = calculateDemandTraitScore(
+                      newRolesI,
+                      demandI.特性需求
+                    ).score;
+                    const afterScoreJ = calculateDemandTraitScore(
+                      newRolesJ,
+                      demandJ.特性需求
+                    ).score;
+                    const afterTotal = afterScoreI + afterScoreJ;
+ 
+                    // 如果交换能提高总特性匹配分数，则执行交换
+                    if (afterTotal > beforeTotal) {
+                      solution.assignment[i] = newRolesI;
+                      solution.assignment[j] = newRolesJ;
+                      improved = true;
+                      console.log(
+                        `交换角色：${roleI.名称} 和 ${roleJ.名称}，特性匹配度从 ${beforeTotal} 提高到 ${afterTotal}`
+                      );
+                      break;
+                    }
+                  }
+                  if (improved) break;
+                }
+                if (improved) break;
+              }
+              if (improved) break;
+            }
+          }
+ 
+          return solution;
+        }
+ 
+        // 回溯优化：在贪心结果基础上进行优化
+        function backtrack(
+          demandIndex,
+          currentAssignment,
+          usedRoles,
+          improvedScore
+        ) {
+          // 检查是否达到限制
+          if (
+            Date.now() - startTime > maxTimeMs ||
+            solutionCount >= maxSolutions
+          ) {
+            return;
+          }
+ 
+          if (demandIndex === selectedDemands.length) {
+            // 完成所有需求的分配
+            const solution = {
+              assignment: [...currentAssignment],
+              totalTraitScore: 0,
+              demandScores: [],
+            };
+ 
+            // 计算特性匹配情况
+            for (let i = 0; i < selectedDemands.length; i++) {
+              const demand = selectedDemands[i];
+              const assignedRoles = currentAssignment[i];
+              const traitScore = calculateDemandTraitScore(
+                assignedRoles,
+                demand.特性需求
+              );
+              solution.demandScores.push(traitScore);
+              solution.totalTraitScore += traitScore.score;
+            }
+ 
+            // 应用特性交换优化
+            const optimizedSolution = optimizeTraitExchange(solution);
+ 
+            // 只保存比贪心结果更好的方案
+            if (optimizedSolution.totalTraitScore > improvedScore) {
+              solutions.push(optimizedSolution);
+              solutionCount++;
+            }
+            return;
+          }
+ 
+          const currentDemand = selectedDemands[demandIndex];
+          const requiredJobs = [...currentDemand.职业需求];
+ 
+          // 为当前需求分配角色
+          function assignRolesForDemand(
+            jobIndex,
+            assignedRoles,
+            remainingUsedRoles
+          ) {
+            if (jobIndex === requiredJobs.length) {
+              // 当前需求分配完成，进入下一个需求
+              currentAssignment[demandIndex] = [...assignedRoles];
+              backtrack(
+                demandIndex + 1,
+                currentAssignment,
+                new Set(remainingUsedRoles),
+                improvedScore
+              );
+              return;
+            }
+ 
+            const targetJob = requiredJobs[jobIndex];
+ 
+            // 找到满足职业要求的候选角色
+            const candidates = availableRoles.filter(
+              (role) =>
+                role.职业 === targetJob && !remainingUsedRoles.has(role.index)
+            );
+ 
+            if (candidates.length === 0) {
+              return; // 没有可用角色，放弃这个分支
+            }
+ 
+            // 按特性匹配度排序
+            candidates.sort((a, b) => {
+              const aScore = roleDemandScores[demandIndex][a.index] || 0;
+              const bScore = roleDemandScores[demandIndex][b.index] || 0;
+              return bScore - aScore;
+            });
+ 
+            // 限制尝试次数
+            const maxCandidates = Math.min(candidates.length, 3);
+ 
+            for (let i = 0; i < maxCandidates; i++) {
+              const candidate = candidates[i];
+              const newAssignedRoles = [...assignedRoles, candidate];
+              const newUsedRoles = new Set(remainingUsedRoles);
+              newUsedRoles.add(candidate.index);
+ 
+              assignRolesForDemand(
+                jobIndex + 1,
+                newAssignedRoles,
+                newUsedRoles
+              );
+ 
+              // 检查是否达到限制
+              if (
+                Date.now() - startTime > maxTimeMs ||
+                solutionCount >= maxSolutions
+              ) {
+                break;
+              }
+            }
+          }
+ 
+          assignRolesForDemand(0, [], new Set(usedRoles));
+        }
+ 
+        // 1. 先执行贪心算法获得基础解
+        const greedyResult = greedyPreassign();
+ 
+        // 2. 计算贪心解的特性匹配分数
+        let greedyScore = 0;
+        for (let i = 0; i < selectedDemands.length; i++) {
+          const demand = selectedDemands[i];
+          const assignedRoles = greedyResult.assignment[i];
+          const traitScore = calculateDemandTraitScore(
+            assignedRoles,
+            demand.特性需求
+          );
+          greedyScore += traitScore.score;
+        }
+ 
+        console.log(`贪心算法解：特性匹配分数 ${greedyScore}`);
+ 
+        // 3. 将贪心解作为基准解
+        const greedySolution = {
+          assignment: greedyResult.assignment,
+          totalTraitScore: greedyScore,
+          demandScores: [],
+        };
+ 
+        // 计算贪心解的需求分数
+        for (let i = 0; i < selectedDemands.length; i++) {
+          const demand = selectedDemands[i];
+          const assignedRoles = greedyResult.assignment[i];
+          const traitScore = calculateDemandTraitScore(
+            assignedRoles,
+            demand.特性需求
+          );
+          greedySolution.demandScores.push(traitScore);
+        }
+ 
+        // 对贪心解应用特性交换优化
+        const optimizedGreedySolution = optimizeTraitExchange(greedySolution);
+        solutions.push(optimizedGreedySolution);
+        solutionCount++;
+ 
+        // 4. 在贪心解基础上进行回溯优化
+        backtrack(
+          0,
+          Array(selectedDemands.length)
+            .fill(null)
+            .map(() => []),
+          new Set(),
+          optimizedGreedySolution.totalTraitScore
+        );
+ 
+        console.log(
+          `找到 ${solutions.length} 个可能的方案，搜索时间：${
+            Date.now() - startTime
+          }ms`
+        );
+ 
+        // 按特性匹配分数排序
+        solutions.sort((a, b) => b.totalTraitScore - a.totalTraitScore);
+ 
+        // 返回前5个最佳方案
+        return solutions.slice(0, 5);
+      }
+ 
+      // 主匹配函数
+      function matchDemands() {
+        const selectedRoles = getSelectedRoles();
+        const selectedDemands = getSelectedDemands();
+        const resultsContainer = document.getElementById("results-container");
+ 
+        resultsContainer.innerHTML = "";
+ 
+        if (selectedDemands.length === 0) {
+          resultsContainer.innerHTML =
+            '<div class="no-solution">请至少选择一个需求</div>';
+          return;
+        }
+ 
+        const totalRolesNeeded = selectedDemands.reduce(
+          (sum, demand) => sum + demand.职业需求.length,
+          0
+        );
+ 
+        if (selectedRoles.length < totalRolesNeeded) {
+          resultsContainer.innerHTML = `<div class="no-solution">可用角色数量不足，需要 ${totalRolesNeeded} 个角色，当前只有 ${selectedRoles.length} 个</div>`;
+          return;
+        }
+ 
+        // 显示搜索状态
+        resultsContainer.innerHTML =
+          '<div style="color: #666; margin-bottom: 10px;">正在搜索最佳匹配方案...</div>';
+ 
+        // 为多个需求寻找最佳匹配方案
+        const solutions = findMultiDemandSolution(
+          selectedDemands,
+          selectedRoles
+        );
+ 
+        resultsContainer.innerHTML = "";
+ 
+        if (solutions.length === 0) {
+          resultsContainer.innerHTML =
+            '<div class="no-solution">无法找到满足所有需求的角色组合方案</div>';
+          return;
+        }
+ 
+        // 显示最佳方案
+        solutions.forEach((solution, solutionIndex) => {
+          const solutionDiv = document.createElement("div");
+          solutionDiv.className = "total-solution";
+ 
+          // 检查是否为完全满足的方案
+          const isPerfectSolution = solution.demandScores.every(
+            (score) =>
+              score.satisfied.length === selectedDemands[0].特性需求.length
+          );
+ 
+          let solutionHTML = `
+                    <div class="solution-header">${
+                      isPerfectSolution ? "✓ 最优方案" : "次等方案"
+                    } ${solutionIndex + 1}</div>
+                    <div style="margin-bottom: 10px; font-weight: bold; color: ${
+                      isPerfectSolution ? "#27ae60" : "#e67e22"
+                    };">
+                        总特性匹配度: ${solution.totalTraitScore}/${
+            selectedDemands.length * 2
+          }
+                        ${
+                          isPerfectSolution
+                            ? "✓ 特性已全部满足"
+                            : "⚠ 特性未完全满足"
+                        }
+                    </div>
+                `;
+ 
+          // 检查角色使用情况
+          const usedRoles = new Set();
+          let hasDuplicate = false;
+ 
+          selectedDemands.forEach((demand, demandIndex) => {
+            const assignedRoles = solution.assignment[demandIndex];
+            const traitScore = solution.demandScores[demandIndex];
+ 
+            // 检查角色重复使用（添加数组检查）
+            if (Array.isArray(assignedRoles)) {
+              assignedRoles.forEach((role) => {
+                if (usedRoles.has(role.index)) {
+                  hasDuplicate = true;
+                }
+                usedRoles.add(role.index);
+              });
+            }
+ 
+            // 显示需求特性匹配情况
+            let traitDisplay = "";
+            demand.特性需求.forEach((trait) => {
+              traitDisplay += `<span >${trait}</span> `;
+            });
+ 
+            let demandHTML = `
+                        <div class="demand-assignment">
+                            <div class="solution-header">
+                                ${demand.物品名称} - 需要特性: ${traitDisplay}
+                            </div>
+                    `;
+ 
+            // 显示每个角色及其贡献（添加数组检查）
+            if (Array.isArray(assignedRoles)) {
+              assignedRoles.forEach((role) => {
+                const { matched } = getMatchedTraits(
+                  role.特性,
+                  demand.特性需求
+                );
+                demandHTML += `
+                                <div class="role-match">
+                                    ${role.名称} (${
+                  role.职业
+                }) - 特性: ${role.特性.join(", ")}
+                                    ${
+                                      matched.length > 0
+                                        ? `<span style="color: #27ae60; margin-left: 10px;">✓ 贡献: ${matched.join(
+                                            ", "
+                                          )}</span>`
+                                        : ""
+                                    }
+                                </div>
+                            `;
+              });
+            }
+ 
+            demandHTML += "</div>";
+            solutionHTML += demandHTML;
+          });
+ 
+          if (hasDuplicate) {
+            solutionHTML +=
+              '<div style="color: #e74c3c; margin-top: 10px; font-weight: bold;">⚠ 警告：存在角色重复使用</div>';
+          } else {
+            solutionHTML +=
+              '<div style="color: #27ae60; margin-top: 10px; font-weight: bold;">✓ 角色使用正常，无重复</div>';
+          }
+ 
+          solutionDiv.innerHTML = solutionHTML;
+          resultsContainer.appendChild(solutionDiv);
+        });
+      }
+ 
+      // 页面加载完成后初始化
+      window.onload = initializePage;
+      // document.addEventListener('DOMContentLoaded', initializePage);
+      document
+        .getElementById("toggleRoles")
+        .addEventListener("click", function () {
+          const container = document.getElementById("roles-container");
+          container.classList.toggle("show");
+          this.textContent = container.classList.contains("show")
+            ? "收起"
+            : "展开";
+        });
+    </script>
+  </body>
+</html>
