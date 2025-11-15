@@ -9,12 +9,6 @@ All wiki about Stella Sora
 ----
 All discussion community i know so far  
 [![Offcial Discord](https://img.shields.io/badge/Discord-%237056BF?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/stellasoraofficial)
-<a href="https://bbs.nga.cn/thread.php?fid=510522">
-  <img src="https://img.icons8.com/fluency/48/china.png" width="20" />
-  CN Discussion
-</a>
-<a href="https://t.me/stellasorait">
-  <img src="https://img.icons8.com/color/48/telegram-app.png" width="20" />
-  Italian Telegram
-</a>
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![NGA.CN](https://img.shields.io/badge/NGA.CN-%237056BF?style=for-the-badge&logo&logoColor=white)](https://bbs.nga.cn/thread.php?fid=510522)
+[![ItalyTelegram](https://img.shields.io/badge/Telegram-22a8e7?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/stellasorait)
+
