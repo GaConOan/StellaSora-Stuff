@@ -2,10 +2,12 @@
 ```
 Just a random bullshit thing to improve experience when play Stella Sora  
 ```
-All wiki about Stella Sora
+All wiki about Stella Sora i know so far
 ----  
-[NovaSora](https://novasora.wiki/)
-[Miraheze](https://stellasora.miraheze.org/wiki/Stella_Sora_Wiki)  
+<a href="https://novasora.wiki/" style="text-decoration:none;">NovaSora</a> |
+<a href="https://stellasora.miraheze.org/wiki/Stella_Sora_Wiki" style="text-decoration:none;">Miraheze</a> |
+<a href="https://namu.wiki/w/%EC%8A%A4%ED%85%94%EB%9D%BC%20%EC%86%8C%EB%9D%BC" style="text-decoration:none;">스텔라 소라</a>
+
 ----
 All discussion community i know so far  
 [![Offcial Discord](https://img.shields.io/badge/Discord-%237056BF?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/stellasoraofficial)
