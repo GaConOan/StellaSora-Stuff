@@ -24,7 +24,8 @@ All wiki about Stella Sora i know so far
 </table>  
 
 ----
-## OFFCIAL: [![Offcial FBpage](https://img.shields.io/badge/StellaSoraEN-blue?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/StellaSoraEN) [![Offcial Discord](https://img.shields.io/badge/StellaSora-%237056BF?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/stellasoraofficial)  
+## OFFCIAL:  
+[![Offcial FBpage](https://img.shields.io/badge/StellaSoraEN-blue?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/StellaSoraEN) [![Offcial Discord](https://img.shields.io/badge/StellaSora-%237056BF?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/stellasoraofficial)  
 
 All discussion community i know so far  
 <br>
