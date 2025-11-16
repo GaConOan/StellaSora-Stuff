@@ -3,10 +3,25 @@
 Just a random bullshit thing to improve experience when play Stella Sora  
 ```
 All wiki about Stella Sora i know so far
-----  
-<a href="https://novasora.wiki/" style="text-decoration:none;">NovaSora</a> |
-<a href="https://stellasora.miraheze.org/wiki/Stella_Sora_Wiki" style="text-decoration:none;">Miraheze</a> |
-<a href="https://namu.wiki/w/%EC%8A%A4%ED%85%94%EB%9D%BC%20%EC%86%8C%EB%9D%BC" style="text-decoration:none;">스텔라 소라</a>
+----
+<table>
+  <tr>
+    <th> Wiki</th>
+    <th> Note</th>
+  </tr>
+  <tr>
+    <td><a href="https://novasora.wiki/" style="text-decoration:none;">NovaSora</a></td>
+    <td> Beta, live model and stat stuff</td>
+  </tr>
+  <tr>
+    <td><a href="https://stellasora.miraheze.org/wiki/Stella_Sora_Wiki" style="text-decoration:none;">Miraheze</a></td>
+    <td>Fandom Wiki but better 100 times</td>
+  </tr>
+  <tr>
+    <td><a href="https://namu.wiki/w/%EC%8A%A4%ED%85%94%EB%9D%BC%20%EC%86%8C%EB%9D%BC" style="text-decoration:none;">스텔라 소라</a></td>
+    <td> Korea Wiki</td>
+  </tr>
+</table>  
 
 ----
 All discussion community i know so far  
