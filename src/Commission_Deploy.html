@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ai Automated Commission Team Deploy </title>
+    <title>Automated Commission Team </title>
     <link rel="icon" href="https://novaweb-usstatic.yo-star.com/h5/favicon.png" type="image/png">
     <style>
       body {
@@ -154,14 +154,14 @@
     <div class="container">
       <h1>Commission Teamcomp</h1>
  
-      <!-- 角色选择区域 -->
+      <!-- Choose your Treeker -->
       <div class="section">
         <h2>
           Playable Character (Default: Choose All)<button
             id="toggleRoles"
             style="float: right; padding: 5px 10px"
           >
-            Mở rộng
+            Expand
           </button>
         </h2>
         <div class="checkbox-group" id="roles-container"></div>
@@ -904,8 +904,8 @@
           const container = document.getElementById("roles-container");
           container.classList.toggle("show");
           this.textContent = container.classList.contains("show")
-            ? "收起"
-            : "展开";
+            ? "Retracted"
+            : "Expand";
         });
     </script>
   </body>
